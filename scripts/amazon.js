@@ -1,3 +1,6 @@
+import { cart, addToCart } from '../data/cart.js'
+import { products } from '../data/products.js'
+
 // Create a formatter for currency with thousand separators
 const formatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -61,31 +64,18 @@ products.forEach((product) => {
 
 document.querySelector('.js-products-grid').innerHTML = productsHTML;
 
+function updateCartQuantity() {
+  let totalQuantity = 0;
+  cart.forEach((cartItem) => {
+    totalQuantity += cartItem.quantity;
+  });
+  document.querySelector('.js-cart-quantity').innerHTML = totalQuantity;
+}
+
 document.querySelectorAll('.js-add-to-cart').forEach((button) => {
   button.addEventListener('click', () => {
     const productID = button.dataset.productId;
-    
-    let matchingItem;
-    cart.forEach((item) => {
-      if (productID === item.productID) {
-        matchingItem = item;
-      }
-    });
-
-    if (matchingItem) {
-      matchingItem.quantity++;
-    } else {
-      cart.push({
-        productID: productID,
-        quantity: 1
-      });
-    }
-    
-    let totalQuantity = 0;
-    cart.forEach((item) => {
-      totalQuantity += item.quantity;
-    });
-
-    document.querySelector('.js-cart-quantity').innerHTML = totalQuantity;
+    addToCart(productID);
+    updateCartQuantity();
   });
 });
