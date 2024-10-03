@@ -1,3 +1,10 @@
+// Create a formatter for currency with thousand separators
+const formatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 2,
+});
+
 const products = [{
   image: 'images/products/athletic-cotton-socks-6-pairs.jpg',
   name: 'Black and Gray Athletic Cotton Socks - 6 Pairs',
@@ -47,7 +54,7 @@ products.forEach((product) => {
       </div>
 
       <div class="product-price">
-        $${product.priceCents / 100}
+        ${formatter.format(product.priceCents / 100)}
       </div>
 
       <div class="product-quantity-container">
@@ -77,3 +84,5 @@ products.forEach((product) => {
       </button>
     </div>`;
 });
+
+document.querySelector('.js-products-grid').innerHTML = productsHTML;
