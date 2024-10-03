@@ -1,12 +1,8 @@
 import { cart, addToCart } from '../data/cart.js'
 import { products } from '../data/products.js'
+import { currencyFormatter } from './utils/money.js';
 
-// Create a formatter for currency with thousand separators
-const formatter = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  minimumFractionDigits: 2,
-});
+updateCartQuantity();
 
 let productsHTML = '';
 
@@ -31,7 +27,7 @@ products.forEach((product) => {
       </div>
 
       <div class="product-price">
-        ${formatter.format(product.priceCents / 100)}
+        ${currencyFormatter.format(product.priceCents / 100)}
       </div>
 
       <div class="product-quantity-container">
@@ -74,8 +70,8 @@ function updateCartQuantity() {
 
 document.querySelectorAll('.js-add-to-cart').forEach((button) => {
   button.addEventListener('click', () => {
-    const productID = button.dataset.productId;
-    addToCart(productID);
+    const productId = button.dataset.productId;
+    addToCart(productId);
     updateCartQuantity();
   });
 });

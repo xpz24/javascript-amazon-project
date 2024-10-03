@@ -1,9 +1,9 @@
-export const cart = [];
+export const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-export function addToCart(productID) {
+export function addToCart(productId) {
   let matchingItem;
   cart.forEach((cartItem) => {
-    if (productID === cartItem.productID) {
+    if (productId === cartItem.productId) {
       matchingItem = cartItem;
     }
   });
@@ -12,8 +12,16 @@ export function addToCart(productID) {
     matchingItem.quantity++;
   } else {
     cart.push({
-      productID: productID,
+      productId: productId,
       quantity: 1
     });
   }
+
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+export function removeFromCart(productId) {
+  const indexToRemove = cart.findIndex(cartItem => cartItem.productId === productId);
+  cart.splice(indexToRemove, 1);
+  localStorage.setItem('cart', JSON.stringify(cart));
 }
