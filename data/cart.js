@@ -13,7 +13,8 @@ export function addToCart(productId) {
   } else {
     cart.push({
       productId: productId,
-      quantity: 1
+      quantity: 1,
+      deliveryId: 0
     });
   }
 
@@ -23,5 +24,14 @@ export function addToCart(productId) {
 export function removeFromCart(productId) {
   const indexToRemove = cart.findIndex(cartItem => cartItem.productId === productId);
   cart.splice(indexToRemove, 1);
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+export function updateDeliveryOption(productId, deliveryId) {
+  const matchingItem = cart.find((cartItem) => {
+    return productId === cartItem.productId;
+  });
+
+  matchingItem.deliveryId = Number(deliveryId);
   localStorage.setItem('cart', JSON.stringify(cart));
 }
