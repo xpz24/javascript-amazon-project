@@ -35,3 +35,7 @@ export function updateDeliveryOption(productId, deliveryId) {
   matchingItem.deliveryId = Number(deliveryId);
   localStorage.setItem('cart', JSON.stringify(cart));
 }
+
+export function getCartItem(productId) {
+  return cart.find(cartItem => cartItem.productId === productId);
+}

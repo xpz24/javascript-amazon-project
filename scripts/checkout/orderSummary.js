@@ -1,4 +1,4 @@
-import { cart, removeFromCart, updateDeliveryOption } from '../../data/cart.js';
+import { cart, removeFromCart, updateDeliveryOption, getCartItem } from '../../data/cart.js';
 import { getProduct } from '../../data/products.js';
 import { currencyFormatter } from '../utils/money.js';
 import { deliveryOptions, getDeliveryOption } from '../../data/deliveryOptions.js';
@@ -37,9 +37,9 @@ export function renderOrderSummary() {
           </div>
           <div class="product-quantity">
             <span>
-              Quantity: <span class="quantity-label">${cartItem.quantity}</span>
+              Quantity: <span class="quantity-label js-quantity-label-${cartItem.productId}">${cartItem.quantity}</span>
             </span>
-            <span class="update-quantity-link link-primary">
+            <span class="update-quantity-link link-primary js-update-link" data-product-id="${cartItem.productId}">
               Update
             </span>
             <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${cartItem.productId}">
@@ -66,6 +66,31 @@ export function renderOrderSummary() {
       removeFromCart(productId);
       document.querySelector(`.js-cart-item-container-${productId}`).remove();
       renderPaymentSummary();
+    });
+  });
+
+  document.querySelectorAll('.js-update-link').forEach((link) => {
+    link.addEventListener('click', () => {
+      const productId = link.dataset.productId;
+      const cartItem = getCartItem(productId);
+
+      if (link.innerText.trim() === 'Update') {
+        const quantityLabelElement = document.querySelector(`.js-quantity-label-${productId}`);
+        quantityLabelElement.innerHTML = `
+          <input class="js-quantity-input-${productId}" type="number" value="${cartItem.quantity}" style="width: 50px;">
+        `;
+        link.innerText = 'Save';
+      } else if (link.innerText.trim() === 'Save') {
+        const quantityInputElement = document.querySelector(`.js-quantity-input-${productId}`);
+        const newQuantity = Number(quantityInputElement.value);
+        if (newQuantity <= 0) {
+          alert("Quantity must be greater than zero.");
+          return;
+        }
+        cartItem.quantity = newQuantity;
+        renderOrderSummary();
+        renderPaymentSummary();
+      }
     });
   });
 
