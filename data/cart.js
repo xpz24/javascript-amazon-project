@@ -1,12 +1,11 @@
-export const cart = JSON.parse(localStorage.getItem('cart')) || [];
+/**
+ * @type {{ productId: string; quantity: number; deliveryId: number; }[]}
+ */
+export const cart = JSON.parse(localStorage.getItem('cart')) || []; // This is the production code for cart
+
 
 export function addToCart(productId) {
-  let matchingItem;
-  cart.forEach((cartItem) => {
-    if (productId === cartItem.productId) {
-      matchingItem = cartItem;
-    }
-  });
+  const matchingItem = getCartItem(productId);
 
   if (matchingItem) {
     matchingItem.quantity++;

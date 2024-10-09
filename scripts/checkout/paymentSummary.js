@@ -1,7 +1,7 @@
 import { cart } from "../../data/cart.js";
 import { getProduct } from "../../data/products.js";
 import { getDeliveryOption } from "../../data/deliveryOptions.js";
-import { currencyFormatter } from "../utils/money.js";
+import { formatCurrency } from "../utils/money.js";
 
 export function renderPaymentSummary() {
   let totalQuantity = 0;
@@ -28,11 +28,11 @@ export function renderPaymentSummary() {
   const totalCents = subTotalCents + taxCents;
 
   // console.log(totalQuantity);
-  // console.log(currencyFormatter.format(itemTotalCents / 100));
-  // console.log(currencyFormatter.format(totalShippingCents / 100));
-  // console.log(currencyFormatter.format(subTotalCents / 100));
-  // console.log(currencyFormatter.format(taxCents / 100));
-  // console.log(currencyFormatter.format(totalCents / 100));
+  // console.log(formatCurrency(itemTotalCents));
+  // console.log(formatCurrency(totalShippingCents));
+  // console.log(formatCurrency(subTotalCents));
+  // console.log(formatCurrency(taxCents));
+  // console.log(formatCurrency(totalCents));
 
   const paymentSummaryHTML = `
   <div class="payment-summary-title">
@@ -41,27 +41,27 @@ export function renderPaymentSummary() {
 
   <div class="payment-summary-row">
     <div>Items (${totalQuantity}):</div>
-    <div class="payment-summary-money">${currencyFormatter.format(itemTotalCents / 100)}</div>
+    <div class="payment-summary-money">${formatCurrency(itemTotalCents)}</div>
   </div>
 
   <div class="payment-summary-row">
     <div>Shipping &amp; handling:</div>
-    <div class="payment-summary-money">${currencyFormatter.format(totalShippingCents / 100)}</div>
+    <div class="payment-summary-money">${formatCurrency(totalShippingCents)}</div>
   </div>
 
   <div class="payment-summary-row subtotal-row">
     <div>Total before tax:</div>
-    <div class="payment-summary-money">${currencyFormatter.format(subTotalCents / 100)}</div>
+    <div class="payment-summary-money">${formatCurrency(subTotalCents)}</div>
   </div>
 
   <div class="payment-summary-row">
     <div>Estimated tax (10%):</div>
-    <div class="payment-summary-money">${currencyFormatter.format(taxCents / 100)}</div>
+    <div class="payment-summary-money">${formatCurrency(taxCents)}</div>
   </div>
 
   <div class="payment-summary-row total-row">
     <div>Order total:</div>
-    <div class="payment-summary-money">${currencyFormatter.format(totalCents / 100)}</div>
+    <div class="payment-summary-money">${formatCurrency(totalCents)}</div>
   </div>
 
   <button class="place-order-button button-primary">
