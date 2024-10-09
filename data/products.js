@@ -1,3 +1,15 @@
+/**
+ * Returns an object containing a product based on the given product ID
+ * @param {string} productId - The ID of the product to find
+ * @returns {{
+ *  id: string,
+ *  image: string,
+ *  name: string,
+ *  rating: { stars: number, count: number},
+ *  priceCents: number,
+ *  keywords: string[]
+ * }} The product object that matches the given ID.
+ */
 export function getProduct(productId) {
   // return products.find((product) => {
   //   return product.id === productId;
@@ -5,6 +17,25 @@ export function getProduct(productId) {
   return products.find(product => product.id === productId);
 }
 
+/**
+ * A list of product objects available in the store. Each product object contains
+ * various details such as the product ID, image path, name, rating, price, and keywords.
+ * Some products may also include an optional type property.
+ * 
+ * @type {Array<{
+ *  id: string,                   // Unique identifier for the product
+ *  image: string,                // URL or path to the product image
+ *  name: string,                 // The name of the product
+ *  rating: {                     // Customer rating details
+ *    stars: number,              // Average number of stars (1-5)
+ *    count: number               // Total number of reviews
+ *  },
+ *  priceCents: number,           // Price of the product in cents (e.g., 1090 = $10.90)
+ *  keywords: string[],           // List of keywords associated with the product (for search and categorization)
+ *  type?: string                // Optional product type (e.g., "clothing", "electronics")
+ *  sizeChartLink?: string,        // Optional size chart link depending on type
+ * }>}
+ */
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",

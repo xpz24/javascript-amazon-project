@@ -65,12 +65,13 @@ function updateCartQuantity() {
   cart.forEach((cartItem) => {
     totalQuantity += cartItem.quantity;
   });
-  document.querySelector('.js-cart-quantity').innerHTML = totalQuantity;
+  document.querySelector('.js-cart-quantity').innerHTML = String(totalQuantity);
 }
 
 document.querySelectorAll('.js-add-to-cart').forEach((button) => {
-  button.addEventListener('click', () => {
-    const productId = button.dataset.productId;
+  const HTMLButton = /** @type {HTMLButtonElement} */(button);
+  HTMLButton.addEventListener('click', () => {
+    const productId = HTMLButton.dataset.productId;
     addToCart(productId);
     updateCartQuantity();
   });

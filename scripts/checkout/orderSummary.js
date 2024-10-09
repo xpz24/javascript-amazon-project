@@ -3,8 +3,11 @@ import { getProduct } from '../../data/products.js';
 import { formatCurrency } from '../utils/money.js';
 import { deliveryOptions, getDeliveryOption } from '../../data/deliveryOptions.js';
 import { renderPaymentSummary } from './paymentSummary.js';
-import dayjs from 'https://unpkg.com/dayjs@1.11.13/esm/index.js';
+import dayjs from 'dayjs';
 
+/**
+ * This function is used to render the order summary of the checkout page
+ */
 export function renderOrderSummary() {
   let cartSummaryHTML = '';
   const now = dayjs();
@@ -60,27 +63,48 @@ export function renderOrderSummary() {
   });
   document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;
 
+  // Example Using Type Guard, use when unsure of the link type
+  // document.querySelectorAll('.js-delete-link').forEach((link) => {
+  //   if (link instanceof HTMLSpanElement) {
+  //     link.addEventListener('click', () => {
+  //     const productId = link.dataset.productId;
+  //     removeFromCart(productId);
+  //     document.querySelector(`.js-cart-item-container-${productId}`).remove();
+  //     renderPaymentSummary();
+  //     });
+  //   }
+  // });
+
+  // Using JSDoc, use when you are sure of the type of link
   document.querySelectorAll('.js-delete-link').forEach((link) => {
-    link.addEventListener('click', () => {
-      const productId = link.dataset.productId;
-      removeFromCart(productId);
-      document.querySelector(`.js-cart-item-container-${productId}`).remove();
-      renderPaymentSummary();
+    /**
+    * This is the span element used for deletion
+    * @type {HTMLSpanElement} // This part is type declaration
+    */
+    const spanLink = /** @type {HTMLSpanElement} */ (link); // This part is explicit type casting
+    spanLink.addEventListener('click', () => {
+    const productId = spanLink.dataset.productId;
+    removeFromCart(productId);
+    document.querySelector(`.js-cart-item-container-${productId}`).remove();
+    renderPaymentSummary();
     });
   });
 
   document.querySelectorAll('.js-update-link').forEach((link) => {
-    link.addEventListener('click', () => {
-      const productId = link.dataset.productId;
+    /** @type {HTMLSpanElement} */
+    const spanLink = /** @type {HTMLSpanElement} */ (link);
+    spanLink.addEventListener('click', () => {
+      const productId = spanLink.dataset.productId;
       const cartItem = getCartItem(productId);
 
-      if (link.innerText.trim() === 'Update') {
+      if (spanLink.innerText.trim() === 'Update') {
         const quantityLabelElement = document.querySelector(`.js-quantity-label-${productId}`);
         quantityLabelElement.innerHTML = `
           <input class="js-quantity-input-${productId}" type="number" value="${cartItem.quantity}" style="width: 50px;">
         `;
-        link.innerText = 'Save';
-      } else if (link.innerText.trim() === 'Save') {
+        spanLink.innerText = 'Save';
+      } else if (spanLink.innerText.trim() === 'Save') {
+        /** @type {HTMLInputElement}*/
         const quantityInputElement = document.querySelector(`.js-quantity-input-${productId}`);
         const newQuantity = Number(quantityInputElement.value);
         if (newQuantity <= 0) {
@@ -95,22 +119,21 @@ export function renderOrderSummary() {
   });
 
   document.querySelectorAll('.js-delivery-option').forEach((option) => {
-    option.addEventListener('click', () => {
-      const { productId, deliveryId } = option.dataset;
-      updateDeliveryOption(productId, deliveryId);
+    const divOption = /** @type {HTMLDivElement} */ (option);
+    divOption.addEventListener('click', () => {
+      const { productId, deliveryId } = divOption.dataset;
+      updateDeliveryOption(productId, Number(deliveryId));
       renderOrderSummary();
       renderPaymentSummary();
-
-      //   const matchingOption = deliveryOptions.find((option) => {
-      //     return option.id === Number(deliveryId);
-      //   });
-      //   const now = dayjs();
-
-      //   const deliveryDateElement = document.querySelector(`.js-delivery-date-${productId}`);
-      //   deliveryDateElement.innerHTML = `Delivery date: ${now.add(matchingOption.deliveryTime, 'day').format('dddd, MMMM DD')}`;
     });
   });
 
+  /**
+   * Generates the delivery options HTML based on the items in cart and the current time represented by a dayjs object
+   * @param {{productId: string, quantity: number, deliveryId: number}} cartItem - item in the cart
+   * @param {dayjs.Dayjs} now - dayjs object representing the current date
+   * @returns {string} the generated deliveryHTML
+   */
   function deliveryOptionsHTML(cartItem, now) {
     //const now = dayjs();
     let deliveryHTML = '';

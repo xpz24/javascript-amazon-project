@@ -7,7 +7,7 @@ describe('Test Suite: Add to Cart', () => {
     cart.length = 0;
   })
 
-  it('Product Already in Cart', () => {
+  it('Product already in cart', () => {
     addToCart('e43638ce-6aa0-4b85-b27f-e1d07eb678c6');
     addToCart('e43638ce-6aa0-4b85-b27f-e1d07eb678c6');
 
@@ -18,7 +18,7 @@ describe('Test Suite: Add to Cart', () => {
     expect(cart[0].quantity).toEqual(2);
   });
 
-  it('Product Not In Cart', () => {
+  it('Product not in cart', () => {
     addToCart('e43638ce-6aa0-4b85-b27f-e1d07eb678c6');
 
     expect(cart.length).toEqual(1);

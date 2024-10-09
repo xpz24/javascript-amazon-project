@@ -3,6 +3,9 @@ import { getProduct } from "../../data/products.js";
 import { getDeliveryOption } from "../../data/deliveryOptions.js";
 import { formatCurrency } from "../utils/money.js";
 
+/**
+ * This function is used to render the payment summary of the checkout page
+ */
 export function renderPaymentSummary() {
   let totalQuantity = 0;
   let itemTotalCents = 0;
