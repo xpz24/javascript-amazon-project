@@ -8,22 +8,26 @@
  * }} The delivery object that matches the given ID
  */
 export function getDeliveryOption(optionId) {
-  return deliveryOptions.find(option => option.id === optionId);// || deliveryOptions[0];
+  return deliveryOptions.find((option) => option.id === optionId); // || deliveryOptions[0];
 }
 
 /**
  * @type {{id: number, deliveryTime: number, deliveryPrice: number}[]}
  */
-export const deliveryOptions = [{
-  id: 0,
-  deliveryTime: 7,
-  deliveryPrice: 0 
-  }, {
-  id: 1,
-  deliveryTime: 3,
-  deliveryPrice: 499
-  }, {
-  id: 2,
-  deliveryTime: 1,
-  deliveryPrice: 999
-}];
+export const deliveryOptions = [
+  {
+    id: 0,
+    deliveryTime: 7,
+    deliveryPrice: 0,
+  },
+  {
+    id: 1,
+    deliveryTime: 3,
+    deliveryPrice: 499,
+  },
+  {
+    id: 2,
+    deliveryTime: 1,
+    deliveryPrice: 999,
+  },
+];

@@ -1,15 +1,35 @@
 {
   "type": "module",
   "devDependencies": {
+    "@babel/cli": "^7.25.7",
+    "@babel/core": "^7.25.7",
+    "@babel/preset-env": "^7.25.7",
     "@eslint/js": "^9.12.0",
     "@types/jasmine": "^5.1.4",
     "@types/node": "^22.7.5",
+    "@webpack-cli/generators": "^3.0.7",
+    "babel-loader": "^9.2.1",
+    "core-js": "^3.38.1",
     "eslint": "^9.12.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jasmine": "^4.2.2",
     "eslint-plugin-n": "^17.10.3",
-    "globals": "^15.10.0"
+    "glob": "^11.0.0",
+    "globals": "^15.10.0",
+    "prettier": "^3.3.3",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "dayjs": "^1.11.13"
+  },
+  "version": "1.0.0",
+  "description": "My webpack project",
+  "name": "my-webpack-project",
+  "scripts": {
+    "build": "webpack --mode=production --node-env=production",
+    "build:dev": "webpack --mode=development",
+    "build:prod": "webpack --mode=production --node-env=production",
+    "watch": "webpack --watch"
   }
 }

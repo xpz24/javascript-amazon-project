@@ -1,7 +1,7 @@
-import { cart } from "../../data/cart.js";
-import { getProduct } from "../../data/products.js";
-import { getDeliveryOption } from "../../data/deliveryOptions.js";
-import { formatCurrency } from "../utils/money.js";
+import { cart } from '../../data/cart.js';
+import { getProduct } from '../../data/products.js';
+import { getDeliveryOption } from '../../data/deliveryOptions.js';
+import { formatCurrency } from '../utils/money.js';
 
 /**
  * This function is used to render the payment summary of the checkout page
@@ -27,7 +27,7 @@ export function renderPaymentSummary() {
   });
 
   const subTotalCents = itemTotalCents + totalShippingCents;
-  const taxCents = subTotalCents * 10 / 100;
+  const taxCents = (subTotalCents * 10) / 100;
   const totalCents = subTotalCents + taxCents;
 
   // console.log(totalQuantity);
@@ -75,7 +75,6 @@ export function renderPaymentSummary() {
   const paymentSummaryElement = document.querySelector('.js-payment-summary');
   paymentSummaryElement.innerHTML = paymentSummaryHTML;
 
-  document.querySelector('.js-return-to-home-link').innerHTML = `${totalQuantity} items`;
-  
+  document.querySelector('.js-return-to-home-link').innerHTML =
+    `${totalQuantity} items`;
 }
-

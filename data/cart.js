@@ -18,7 +18,7 @@ export function addToCart(productId) {
     cart.push({
       productId: productId,
       quantity: 1,
-      deliveryId: 0
+      deliveryId: 0,
     });
   }
 
@@ -31,7 +31,9 @@ export function addToCart(productId) {
  * @returns {void} void
  */
 export function removeFromCart(productId) {
-  const indexToRemove = cart.findIndex(cartItem => cartItem.productId === productId);
+  const indexToRemove = cart.findIndex(
+    (cartItem) => cartItem.productId === productId,
+  );
   cart.splice(indexToRemove, 1);
   localStorage.setItem('cart', JSON.stringify(cart));
 }
@@ -61,5 +63,5 @@ export function updateDeliveryOption(productId, deliveryId) {
  * }} The item object that matches the given ID.
  */
 export function getCartItem(productId) {
-  return cart.find(cartItem => cartItem.productId === productId);
+  return cart.find((cartItem) => cartItem.productId === productId);
 }
