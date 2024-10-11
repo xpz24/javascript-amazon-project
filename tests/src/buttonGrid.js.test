@@ -1,0 +1,18 @@
+import '../lib/jasmine-5.3.0/jasmine.css';
+import './buttonGrid.css';
+import { viewHtmlButton as orderSummaryButton } from '../spec/scripts/checkout/orderSummaryTest.js';
+
+window.addEventListener('load', () => {
+  const buttonGridHeader = document.createElement('h1');
+  buttonGridHeader.classList.add('jasmine_html-reporter');
+  buttonGridHeader.innerText = 'Test Render Views';
+  buttonGridHeader.style.fontSize = '14px';
+  buttonGridHeader.style.marginTop = '20px';
+
+  const buttonGridContainer = document.createElement('div');
+  buttonGridContainer.classList.add('jasmine_html-reporter');
+  buttonGridContainer.appendChild(orderSummaryButton);
+
+  document.body.appendChild(buttonGridHeader);
+  document.body.appendChild(buttonGridContainer);
+});

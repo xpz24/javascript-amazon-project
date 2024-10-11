@@ -73,8 +73,8 @@ export function renderPaymentSummary() {
   `;
 
   const paymentSummaryElement = document.querySelector('.js-payment-summary');
-  paymentSummaryElement.innerHTML = paymentSummaryHTML;
+  paymentSummaryElement && (paymentSummaryElement.innerHTML = paymentSummaryHTML);
 
-  document.querySelector('.js-return-to-home-link').innerHTML =
-    `${totalQuantity} items`;
+  const returnHomeElement = document.querySelector('.js-return-to-home-link');
+  returnHomeElement && (returnHomeElement.innerHTML = `${totalQuantity} items`);
 }

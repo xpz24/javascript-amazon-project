@@ -6,9 +6,11 @@ export default {
   entry: {
     amazon: './scripts/amazon.js',
     checkout: './scripts/checkout.js',
+    // orderSummary: './scripts/checkout/orderSummary.js',
 
     // Separate entry point for Jasmine test files
     jasmineTests: glob
+      // .sync(['./tests/spec/**/*.js', './tests/src/**/*.js'])
       .sync('./tests/spec/**/*.js')
       .map((file) => `./${file.replace(/\\/g, '/')}`), // Glob to match all test files in the 'spec' folder
   },
@@ -41,6 +43,10 @@ export default {
             ],
           },
         },
+      },
+      {
+        test: /\.css$/i, // Apply this rule to CSS files
+        use: ['style-loader', 'css-loader'], // Process and inject CSS
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
