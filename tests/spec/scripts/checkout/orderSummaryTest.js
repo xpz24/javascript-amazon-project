@@ -59,7 +59,6 @@ describe('Test Suite: renderOrderSummary', () => {
     let count = cart.length; // Replace with manual count if needed eg:- 2 if adding to items to cart
 
     expect(document.querySelectorAll('.js-cart-item-container').length).toEqual(count);
-
     testProducts.forEach((product) => {
       /**@type {HTMLSpanElement} */
       const deleteLink = document.querySelector(`.js-delete-link-${product.productId}`);
@@ -67,10 +66,9 @@ describe('Test Suite: renderOrderSummary', () => {
       count--;
 
       expect(cart.length).toEqual(count);
-
       expect(document.querySelectorAll('.js-cart-item-container').length).toEqual(count);
     });
-
+    
     expect(count).toEqual(0);
   });
 });

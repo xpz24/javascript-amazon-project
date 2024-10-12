@@ -1,14 +1,64 @@
+import { formatCurrency } from "../scripts/utils/money.js";
+
+/**
+ * @typedef {Object} ProductDetails
+ * @property {string} id
+ * @property {string} image
+ * @property {string} name
+ * @property {{stars: number, count: number}} rating
+ * @property {number} priceCents
+ * @property {string[]} keywords
+ * @property {string} [type]
+ * @property {string} [sizeChartLink]
+ */
+
+/**
+ * @Class Used to generate product objects
+ */
+class Product {
+  id;
+  image;
+  name;
+  rating;
+  priceCents;
+  keywords;
+
+  /**
+   * @constructor Product
+   * @param {ProductDetails} productDetails
+   */
+  constructor(productDetails) {
+    this.id = productDetails.id;
+    this.image = productDetails.image;
+    this.name = productDetails.name;
+    this.rating = productDetails.rating;
+    this.priceCents = productDetails.priceCents;
+    this.keywords = productDetails.keywords;
+    productDetails.type && (this.type = productDetails.type);
+    productDetails.sizeChartLink && (this.sizeChartLink = productDetails.sizeChartLink);
+  }
+
+  /**
+   * This method returns the filepath of the rating stars image.
+   * @returns {string}
+   */
+  getStarsUrl() {
+    return `images/ratings/rating-${this.rating.stars * 10}.png`;
+  }
+
+  /**
+   * This method returns the price of the product in USD
+   * @returns {string}
+   */
+  getPrice() {
+    return formatCurrency(this.priceCents);
+  }
+}
+
 /**
  * Returns an object containing a product based on the given product ID
  * @param {string} productId - The ID of the product to find
- * @returns {{
- *  id: string,
- *  image: string,
- *  name: string,
- *  rating: { stars: number, count: number},
- *  priceCents: number,
- *  keywords: string[]
- * }} The product object that matches the given ID.
+ * @returns {Product} The product object that matches the given ID.
  */
 export function getProduct(productId) {
   // return products.find((product) => {
@@ -20,21 +70,7 @@ export function getProduct(productId) {
 /**
  * A list of product objects available in the store. Each product object contains
  * various details such as the product ID, image path, name, rating, price, and keywords.
- * Some products may also include an optional type property.
- *
- * @type {Array<{
- *  id: string,                   // Unique identifier for the product
- *  image: string,                // URL or path to the product image
- *  name: string,                 // The name of the product
- *  rating: {                     // Customer rating details
- *    stars: number,              // Average number of stars (1-5)
- *    count: number               // Total number of reviews
- *  },
- *  priceCents: number,           // Price of the product in cents (e.g., 1090 = $10.90)
- *  keywords: string[],           // List of keywords associated with the product (for search and categorization)
- *  type?: string                // Optional product type (e.g., "clothing", "electronics")
- *  sizeChartLink?: string,        // Optional size chart link depending on type
- * }>}
+ * Some products may also include an optional type and sizeChartLink property.
  */
 export const products = [
   {
@@ -507,4 +543,4 @@ export const products = [
     priceCents: 2400,
     keywords: ['sweaters', 'hoodies', 'apparel', 'mens'],
   },
-];
+].map((productDetails) => new Product(productDetails));

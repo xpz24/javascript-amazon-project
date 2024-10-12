@@ -1,11 +1,19 @@
 /**
+ * @typedef {Object} cartItem
+ * @property {string} productId
+ * @property {number} quantity
+ * @property {number} deliveryId
+ */
+
+/**
  * Contains the list of cartItem Objects
- * @type {{ productId: string; quantity: number; deliveryId: number; }[]}
+ * @type {cartItem[]}
  */
 export const cart = JSON.parse(localStorage.getItem('cart')) || []; // This is the production code for cart
 
 /**
- * Adds an object to the cart array based on the given product ID, if it already exists, then updates the quantity property of the existing object. Saves the cart to localStorage.
+ * Adds an object to the cart array based on the given product ID, if it already exists,
+ * then updates the quantity property of the existing object. Saves the cart to localStorage.
  * @param {string} productId - The ID of the cart item to be added
  * @returns {void} void
  */
@@ -31,9 +39,7 @@ export function addToCart(productId) {
  * @returns {void} void
  */
 export function removeFromCart(productId) {
-  const indexToRemove = cart.findIndex(
-    (cartItem) => cartItem.productId === productId,
-  );
+  const indexToRemove = cart.findIndex((cartItem) => cartItem.productId === productId);
   cart.splice(indexToRemove, 1);
   localStorage.setItem('cart', JSON.stringify(cart));
 }
@@ -56,11 +62,7 @@ export function updateDeliveryOption(productId, deliveryId) {
 /**
  * Returns an object containing an item based on the given product ID
  * @param {string} productId - The ID of the cart item to find
- * @returns {{
- *  productId: string,
- *  quantity: number,
- *  deliveryId: number
- * }} The item object that matches the given ID.
+ * @returns {cartItem} The item object that matches the given ID.
  */
 export function getCartItem(productId) {
   return cart.find((cartItem) => cartItem.productId === productId);
