@@ -1,5 +1,5 @@
 import { cart, removeFromCart, updateDeliveryOption, getCartItem } from '../../data/cart.js';
-import { getProduct } from '../../data/products.js';
+import { Product } from '../../data/products.js';
 import { formatCurrency } from '../utils/money.js';
 import { deliveryOptions, getDeliveryOption } from '../../data/deliveryOptions.js';
 import { renderPaymentSummary } from './paymentSummary.js';
@@ -16,7 +16,7 @@ export function renderOrderSummary() {
     // const matchingProduct = products.find((product) => {
     //   return product.id === cartItem.productId;
     // });
-    const matchingProduct = getProduct(cartItem.productId);
+    const matchingProduct = Product.getProduct(cartItem.productId);
     const deliveryOption = getDeliveryOption(cartItem.deliveryId);
     const deliveryDateString = now.add(deliveryOption.deliveryTime, 'day').format('dddd, MMMM DD');
 
@@ -35,7 +35,7 @@ export function renderOrderSummary() {
             ${matchingProduct.name}
           </div>
           <div class="product-price">
-            ${matchingProduct.getPrice()}
+            ${matchingProduct.price}
           </div>
           <div class="product-quantity js-product-quantity-${cartItem.productId}">
             <span>

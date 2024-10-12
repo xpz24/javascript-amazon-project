@@ -1,5 +1,5 @@
 import { cart } from '../../data/cart.js';
-import { getProduct } from '../../data/products.js';
+import { Product } from '../../data/products.js';
 import { getDeliveryOption } from '../../data/deliveryOptions.js';
 import { formatCurrency } from '../utils/money.js';
 
@@ -15,7 +15,7 @@ export function renderPaymentSummary() {
     // const matchingProduct = products.find((product) => {
     //   return product.id === cartItem.productId;
     // });
-    const matchingProduct = getProduct(cartItem.productId);
+    const matchingProduct = Product.getProduct(cartItem.productId);
     // const matchingDeliveryOption = deliveryOptions.find((option) => {
     //   return option.id === cartItem.deliveryId;
     // });

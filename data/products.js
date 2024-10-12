@@ -10,12 +10,14 @@ import { formatCurrency } from '../scripts/utils/money.js';
  * @property {string[]} keywords
  * @property {string} [type]
  * @property {string} [sizeChartLink]
+ * @property {string} [instructionLink]
+ * @property {string} [warrantyLink]
  */
 
 /**
- * @Class Used to generate product objects
+ * This base class encapsulates basic product properties and methods
  */
-class Product {
+export class Product {
   id;
   image;
   name;
@@ -37,26 +39,47 @@ class Product {
   }
 
   /**
-   * This method returns the filepath of the rating stars image.
-   * @returns {string}
+   * This method returns the path of the rating stars image.
+   * @returns {string} Rating stars image link.
    */
-  getStarsUrl() {
+  get starsUrl() {
     return `images/ratings/rating-${this.rating.stars * 10}.png`;
   }
 
   /**
    * This method returns the price of the product in USD
-   * @returns {string}
+   * @returns {string} Price of product in USD
    */
-  getPrice() {
+  get price() {
     return formatCurrency(this.priceCents);
+  }
+
+  /**
+   * Empty String if base class
+   */
+  extraInfoHTML() {
+    return '';
+  }
+
+  /**
+   * Returns an object containing a product based on the given product ID
+   * @static
+   * @param {string} productId - The ID of the product to find
+   * @returns {Product | Clothing} The product object that matches the given ID.
+   */
+  static getProduct(productId) {
+    // return products.find((product) => {
+    //   return product.id === productId;
+    // });
+    return products.find((product) => product.id === productId);
   }
 }
 
 /**
- * @class Used to generate clothing Objects, inherits from Product class
+ * Specialized for clothing objects
+ * @extends {Product}
  */
-export class Clothing extends Product {
+class Clothing extends Product {
   sizeChartLink;
 
   /**
@@ -70,7 +93,8 @@ export class Clothing extends Product {
 
   /**
    * Method returns the HTML tag <a> referenced to size chart link
-   * @returns {string}
+   * @override
+   * @returns {string} Size chart Link
    */
   extraInfoHTML() {
     return `<a href="${this.sizeChartLink}" target="_blank">Size chart</a>`;
@@ -78,22 +102,38 @@ export class Clothing extends Product {
 }
 
 /**
- * Returns an object containing a product based on the given product ID
- * @param {string} productId - The ID of the product to find
- * @returns {Product | Clothing} The product object that matches the given ID.
+ * Specialized for appliance objects
+ * @extends {Product}
  */
-export function getProduct(productId) {
-  // return products.find((product) => {
-  //   return product.id === productId;
-  // });
-  return products.find((product) => product.id === productId);
+class Appliance extends Product {
+  instructionLink;
+  warrantyLink;
+
+  /**
+   * @constructor Appliance
+   * @param {ProductDetails} productDetails
+   */
+  constructor(productDetails) {
+    super(productDetails);
+    this.instructionLink = productDetails.instructionLink;
+    this.warrantyLink = productDetails.warrantyLink;
+  }
+
+  /**
+   * Method returns the HTML links for warranty and instructions
+   * @override
+   * @returns {string} Instruction and Warranty link
+   */
+  extraInfoHTML() {
+    return `<a href="${this.instructionLink}" target="_blank">Instructions</a><a href="${this.warrantyLink}" target="_blank">warranty</a>`;
+  }
 }
 
 /**
  * A list of product objects available in the store. Each product object contains
  * various details such as the product ID, image path, name, rating, price, and keywords.
  * Some products may also include an optional type and sizeChartLink property.
- * @type {(Product | Clothing)[]}
+ * @type {(Product | Clothing | Appliance)[]}
  */
 export const products = [
   {
@@ -141,6 +181,9 @@ export const products = [
     },
     priceCents: 1899,
     keywords: ['toaster', 'kitchen', 'appliances'],
+    type: 'appliance',
+    instructionLink: 'images/appliance-instructions.png',
+    warrantyLink: 'images/appliance-warranty.png',
   },
   {
     id: '3ebe75dc-64d2-4137-8860-1f5a963e534b',
@@ -275,6 +318,9 @@ export const products = [
     },
     priceCents: 3074,
     keywords: ['water boiler', 'appliances', 'kitchen'],
+    type: 'appliance',
+    instructionLink: 'images/appliance-instructions.png',
+    warrantyLink: 'images/appliance-warranty.png',
   },
   {
     id: '6b07d4e7-f540-454e-8a1e-363f25dbae7d',
@@ -488,6 +534,9 @@ export const products = [
     },
     priceCents: 2250,
     keywords: ['coffeemakers', 'kitchen', 'appliances'],
+    type: 'appliance',
+    instructionLink: 'images/appliance-instructions.png',
+    warrantyLink: 'images/appliance-warranty.png',
   },
   {
     id: '02e3a47e-dd68-467e-9f71-8bf6f723fdae',
@@ -532,6 +581,9 @@ export const products = [
     },
     priceCents: 10747,
     keywords: ['food blenders', 'kitchen', 'appliances'],
+    type: 'appliance',
+    instructionLink: 'images/appliance-instructions.png',
+    warrantyLink: 'images/appliance-warranty.png',
   },
   {
     id: '36c64692-677f-4f58-b5ec-0dc2cf109e27',
@@ -566,8 +618,12 @@ export const products = [
     priceCents: 2400,
     keywords: ['sweaters', 'hoodies', 'apparel', 'mens'],
   },
-].map((productDetails) =>
-  productDetails.type === 'clothing' ? new Clothing(productDetails) : new Product(productDetails),
-);
-
-console.log(products[2]);
+].map((productDetails) => {
+  if (productDetails.type === 'clothing') {
+    return new Clothing(productDetails);
+  } else if (productDetails.type === 'appliance') {
+    return new Appliance(productDetails);
+  } else {
+    return new Product(productDetails);
+  }
+});
