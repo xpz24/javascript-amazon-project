@@ -1,5 +1,5 @@
 import { cart, addToCart } from '../data/cart.js';
-import { products } from '../data/products.js';
+import { products, Clothing } from '../data/products.js';
 
 updateCartQuantity();
 
@@ -43,7 +43,9 @@ products.forEach((product) => {
           <option value="10">10</option>
         </select>
       </div>
-
+      ${product instanceof Clothing ? product.extraInfoHTML() : ''
+      /* Normally using polymorphism be better I think as there would be multiple
+      child classes and they each might need overrides for extraInfoHTML()*/}
       <div class="product-spacer"></div>
 
       <div class="added-to-cart">

@@ -1,4 +1,4 @@
-import { formatCurrency } from "../scripts/utils/money.js";
+import { formatCurrency } from '../scripts/utils/money.js';
 
 /**
  * @typedef {Object} ProductDetails
@@ -34,8 +34,6 @@ class Product {
     this.rating = productDetails.rating;
     this.priceCents = productDetails.priceCents;
     this.keywords = productDetails.keywords;
-    productDetails.type && (this.type = productDetails.type);
-    productDetails.sizeChartLink && (this.sizeChartLink = productDetails.sizeChartLink);
   }
 
   /**
@@ -56,9 +54,33 @@ class Product {
 }
 
 /**
+ * @class Used to generate clothing Objects, inherits from Product class
+ */
+export class Clothing extends Product {
+  sizeChartLink;
+
+  /**
+   * @constructor Clothing
+   * @param {ProductDetails} productDetails
+   */
+  constructor(productDetails) {
+    super(productDetails);
+    this.sizeChartLink = productDetails.sizeChartLink;
+  }
+
+  /**
+   * Method returns the HTML tag <a> referenced to size chart link
+   * @returns {string}
+   */
+  extraInfoHTML() {
+    return `<a href="${this.sizeChartLink}" target="_blank">Size chart</a>`;
+  }
+}
+
+/**
  * Returns an object containing a product based on the given product ID
  * @param {string} productId - The ID of the product to find
- * @returns {Product} The product object that matches the given ID.
+ * @returns {Product | Clothing} The product object that matches the given ID.
  */
 export function getProduct(productId) {
   // return products.find((product) => {
@@ -71,6 +93,7 @@ export function getProduct(productId) {
  * A list of product objects available in the store. Each product object contains
  * various details such as the product ID, image path, name, rating, price, and keywords.
  * Some products may also include an optional type and sizeChartLink property.
+ * @type {(Product | Clothing)[]}
  */
 export const products = [
   {
@@ -543,4 +566,8 @@ export const products = [
     priceCents: 2400,
     keywords: ['sweaters', 'hoodies', 'apparel', 'mens'],
   },
-].map((productDetails) => new Product(productDetails));
+].map((productDetails) =>
+  productDetails.type === 'clothing' ? new Clothing(productDetails) : new Product(productDetails),
+);
+
+console.log(products[2]);
