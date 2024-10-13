@@ -1,6 +1,6 @@
 import { renderOrderSummary } from '../../../../scripts/checkout/orderSummary.js';
 import { cart } from '../../../../data/cart-class.js';
-import { loadProducts } from '../../../../data/products.js';
+import { loadProductsFetch } from '../../../../data/products.js';
 
 describe('Test Suite: renderOrderSummary', () => {
   /** @type {{productId: string, quantity: number}[]} */
@@ -17,7 +17,10 @@ describe('Test Suite: renderOrderSummary', () => {
 
   const testContainerElement = document.querySelector('.js-test-container');
 
-  beforeAll((done) => loadProducts(done));
+  beforeAll(() => loadProductsFetch());
+  // beforeAll((done) => {
+  //   loadProductsFetch().then(() => done())
+  // });
 
   beforeEach(() => {
     spyOn(localStorage, 'setItem').and.stub();

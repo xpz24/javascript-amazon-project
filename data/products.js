@@ -138,29 +138,49 @@ class Appliance extends Product {
  */
 export let products = [];
 
-/**
- * @param {() => void} callback
- */
-export function loadProducts(callback) {
-  const xhr = new XMLHttpRequest();
-  xhr.addEventListener('load', () => {
-    /** @type {ProductDetails[]} */
-    const productObjects = JSON.parse(xhr.response);
+export function loadProductsFetch() {
+  const promise = fetch('https://supersimplebackend.dev/products')
+    .then((response) => response.json())
+    .then((parsedData) => {
+      /** @type {ProductDetails[]} */
+      const productObjects = parsedData;
 
-    products = productObjects.map((productDetails) => {
-      if (productDetails.type === 'clothing') {
-        return new Clothing(productDetails);
-      } else if (productDetails.keywords.includes('appliances')) {
-        return new Appliance(productDetails);
-      } else {
-        return new Product(productDetails);
-      }
+      products = productObjects.map((productDetails) => {
+        if (productDetails.type === 'clothing') {
+          return new Clothing(productDetails);
+        } else if (productDetails.keywords.includes('appliances')) {
+          return new Appliance(productDetails);
+        } else {
+          return new Product(productDetails);
+        }
+      });
     });
-    callback();
-  });
-  xhr.open('GET', 'https://supersimplebackend.dev/products');
-  xhr.send();
+  return promise;
 }
+
+// /**
+//  * @param {() => void} callback
+//  */
+// export function loadProducts(callback) {
+//   const xhr = new XMLHttpRequest();
+//   xhr.addEventListener('load', () => {
+//     /** @type {ProductDetails[]} */
+//     const productObjects = JSON.parse(xhr.response);
+
+//     products = productObjects.map((productDetails) => {
+//       if (productDetails.type === 'clothing') {
+//         return new Clothing(productDetails);
+//       } else if (productDetails.keywords.includes('appliances')) {
+//         return new Appliance(productDetails);
+//       } else {
+//         return new Product(productDetails);
+//       }
+//     });
+//     callback();
+//   });
+//   xhr.open('GET', 'https://supersimplebackend.dev/products');
+//   xhr.send();
+// }
 
 /**
  * A list of product objects available in the store. Each product object contains
