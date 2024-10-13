@@ -8,7 +8,21 @@ import { loadProductsFetch } from '../data/products.js';
 //   renderOrderSummary();
 //   renderPaymentSummary();
 // });
-loadProductsFetch().then(() => {
+
+// loadProductsFetch().then(() => {
+//   renderOrderSummary();
+//   renderPaymentSummary();
+// });
+
+renderCheckoutPage();
+
+async function renderCheckoutPage() {
+  try {
+    await loadProductsFetch();
+  } catch (error) {
+    console.log(error);
+    console.log('Error, please try again');
+  }
   renderOrderSummary();
   renderPaymentSummary();
-});
+}

@@ -9,6 +9,7 @@
  * @class Used to generate cart objects
  */
 class Cart {
+  #maxCapacity = 99;
   #localStorageKey;
   /** @type {cartItem[]} */
   #cartItems;
@@ -59,10 +60,14 @@ class Cart {
    * @returns {void} void
    */
   addToCart(productId, quantity = 1) {
-    const matchingItem = this.getCartItem(productId);
+    if (this.totalQuantity + quantity > this.#maxCapacity) {
+      alert('The cart cannot hold more than 99 items');
+      return;
+    }
 
+    const matchingItem = this.getCartItem(productId);
     if (matchingItem) {
-      matchingItem.quantity = Math.min(matchingItem.quantity + quantity, 99);
+      matchingItem.quantity = Math.min(matchingItem.quantity + quantity, this.#maxCapacity);
     } else {
       this.#cartItems.push({
         productId: productId,
@@ -83,9 +88,13 @@ class Cart {
    */
   overrideQuantity(productId, quantity) {
     const matchingItem = this.getCartItem(productId);
+    if (this.totalQuantity - matchingItem.quantity + quantity > this.#maxCapacity) {
+      alert('The cart cannot hold more than 99 items');
+      return;
+    }
 
     if (matchingItem) {
-      matchingItem.quantity = Math.min(matchingItem.quantity + quantity, 99);
+      matchingItem.quantity = Math.min(quantity, this.#maxCapacity);
     }
     localStorage.setItem(this.#localStorageKey, JSON.stringify(this.#cartItems));
   }

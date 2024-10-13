@@ -1,9 +1,16 @@
 import { cart } from '../data/cart-class.js';
 import { products, loadProductsFetch } from '../data/products.js';
 
-loadProductsFetch().then(() => renderProductGrid());
 
-function renderProductGrid() {
+renderProductGrid()
+
+async function renderProductGrid() {
+  try {
+    await loadProductsFetch();
+  } catch (error) {
+    console.log(error);
+    console.log('Error, please try again');
+  }
   updateCartQuantity();
   let productsHTML = '';
 

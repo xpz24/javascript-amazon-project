@@ -149,6 +149,8 @@ export function loadProductsFetch() {
         if (productDetails.type === 'clothing') {
           return new Clothing(productDetails);
         } else if (productDetails.keywords.includes('appliances')) {
+          productDetails.instructionLink = 'images/appliance-instructions.png';
+          productDetails.warrantyLink = 'images/appliance-warranty.png';
           return new Appliance(productDetails);
         } else {
           return new Product(productDetails);
