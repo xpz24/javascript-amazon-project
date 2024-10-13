@@ -1,4 +1,4 @@
-import { cart } from '../data/cart-oop.js';
+import { cart } from '../data/cart-class.js';
 import { products } from '../data/products.js';
 
 updateCartQuantity();
@@ -68,7 +68,7 @@ document.querySelectorAll('.js-add-to-cart').forEach((button) => {
   HTMLButton.addEventListener('click', () => {
     const productId = HTMLButton.dataset.productId;
     /** @type {HTMLSelectElement} */
-    const selectElement = document.querySelector(`.js-selected-quantity-${productId}`)
+    const selectElement = document.querySelector(`.js-selected-quantity-${productId}`);
     cart.addToCart(productId, Number(selectElement.value));
     updateCartQuantity();
   });

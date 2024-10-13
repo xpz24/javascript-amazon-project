@@ -1,4 +1,4 @@
-import { cart } from '../../../data/cart-oop.js';
+import { cart } from '../../../data/cart-class.js';
 
 describe('Test Suite: Add to Cart', () => {
   beforeEach(() => {

@@ -1,5 +1,5 @@
 import { renderOrderSummary } from '../../../../scripts/checkout/orderSummary.js';
-import { cart } from '../../../../data/cart-oop.js';
+import { cart } from '../../../../data/cart-class.js';
 
 describe('Test Suite: renderOrderSummary', () => {
   /**
@@ -68,7 +68,7 @@ describe('Test Suite: renderOrderSummary', () => {
       expect(cart.cartItems.length).toEqual(count);
       expect(document.querySelectorAll('.js-cart-item-container').length).toEqual(count);
     });
-    
+
     expect(count).toEqual(0);
   });
 });
