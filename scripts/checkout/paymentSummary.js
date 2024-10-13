@@ -1,4 +1,4 @@
-import { cart } from '../../data/cart.js';
+import { cart } from '../../data/cart-oop.js';
 import { Product } from '../../data/products.js';
 import { getDeliveryOption } from '../../data/deliveryOptions.js';
 import { formatCurrency } from '../utils/money.js';
@@ -10,19 +10,20 @@ export function renderPaymentSummary() {
   let totalQuantity = 0;
   let itemTotalCents = 0;
   let totalShippingCents = 0;
+  const cartItems = cart.cartItems;
 
-  cart.forEach((cartItem) => {
+  cartItems.forEach((item) => {
     // const matchingProduct = products.find((product) => {
     //   return product.id === cartItem.productId;
     // });
-    const matchingProduct = Product.getProduct(cartItem.productId);
+    const matchingProduct = Product.getProduct(item.productId);
     // const matchingDeliveryOption = deliveryOptions.find((option) => {
     //   return option.id === cartItem.deliveryId;
     // });
-    const matchingDeliveryOption = getDeliveryOption(cartItem.deliveryId);
+    const matchingDeliveryOption = getDeliveryOption(item.deliveryId);
 
-    totalQuantity += cartItem.quantity;
-    itemTotalCents += matchingProduct.priceCents * cartItem.quantity;
+    totalQuantity += item.quantity;
+    itemTotalCents += matchingProduct.priceCents * item.quantity;
     totalShippingCents += matchingDeliveryOption.deliveryPrice;
   });
 

@@ -63,6 +63,8 @@ export class Product {
 
   /**
    * Returns an object containing a product based on the given product ID
+   * Might be better to put this function in as a standalone function or in
+   * a static class called Products, which can contain all static methods that pertains to products
    * @static
    * @param {string} productId - The ID of the product to find
    * @returns {Product | Clothing} The product object that matches the given ID.

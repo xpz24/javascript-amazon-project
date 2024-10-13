@@ -1,5 +1,5 @@
 import { renderOrderSummary } from '../../../../scripts/checkout/orderSummary.js';
-import { cart, addToCart } from '../../../../data/cart.js';
+import { cart } from '../../../../data/cart-oop.js';
 
 describe('Test Suite: renderOrderSummary', () => {
   /**
@@ -21,11 +21,11 @@ describe('Test Suite: renderOrderSummary', () => {
   beforeEach(() => {
     spyOn(localStorage, 'setItem').and.stub();
     spyOn(localStorage, 'getItem').and.returnValue(JSON.stringify([])); // Just incase localStorage interferes with the testing
-    cart.length = 0;
+    cart.deleteCartItems();
 
     testProducts.forEach((product) => {
       for (let i = 0; i < product.quantity; i++) {
-        addToCart(product.productId);
+        cart.addToCart(product.productId);
       }
     });
 
@@ -56,7 +56,7 @@ describe('Test Suite: renderOrderSummary', () => {
   });
 
   it('Removes a product', () => {
-    let count = cart.length; // Replace with manual count if needed eg:- 2 if adding to items to cart
+    let count = cart.cartItems.length; // Replace with manual count if needed eg:- 2 if adding to items to cart
 
     expect(document.querySelectorAll('.js-cart-item-container').length).toEqual(count);
     testProducts.forEach((product) => {
@@ -65,7 +65,7 @@ describe('Test Suite: renderOrderSummary', () => {
       deleteLink.click();
       count--;
 
-      expect(cart.length).toEqual(count);
+      expect(cart.cartItems.length).toEqual(count);
       expect(document.querySelectorAll('.js-cart-item-container').length).toEqual(count);
     });
     

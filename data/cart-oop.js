@@ -24,12 +24,34 @@ class Cart {
     this.#cartItems = JSON.parse(localStorage.getItem(this.#localStorageKey)) || [];
   }
 
+  get totalQuantity() {
+    let quantity = 0;
+    this.#cartItems.forEach((item) => {
+      quantity += item.quantity;
+    });
+    return quantity;
+  }
+
+  get cartItems() {
+    /** @type {cartItem[]} */
+    const deepClone = JSON.parse(JSON.stringify(this.#cartItems));
+    return deepClone;
+  }
+
+  // get length() {
+  //   return this.#cartItems.length
+  // }
+
+  deleteCartItems() {
+    this.#cartItems.length = 0;
+  }
+
   /**
    * Returns an object containing an item based on the given product ID
    * @param {string} productId - The ID of the cart item to find
    * @returns {cartItem} The item object that matches the given ID.
    */
-  #getCartItem(productId) {
+  getCartItem(productId) {
     return this.#cartItems.find((item) => item.productId === productId);
   }
 
@@ -40,7 +62,7 @@ class Cart {
    * @returns {void} void
    */
   addToCart(productId) {
-    const matchingItem = this.#getCartItem(productId);
+    const matchingItem = this.getCartItem(productId);
 
     if (matchingItem) {
       matchingItem.quantity++;
@@ -76,16 +98,10 @@ class Cart {
     // const matchingItem = cart.find((cartItem) => {
     //   return productId === cartItem.productId;
     // });
-    const matchingItem = this.#getCartItem(productId);
+    const matchingItem = this.getCartItem(productId);
     matchingItem.deliveryId = deliveryId;
     localStorage.setItem(this.#localStorageKey, JSON.stringify(this.#cartItems));
   }
 }
 
-const cart = new Cart('cart-oop');
-cart.addToCart('a434b69f-1bc1-482d-9ce7-cd7f4a66ce8d');
-const businessCart = new Cart('cart-business');
-businessCart.addToCart('a434b69f-1bc1-482d-9ce7-cd7f4a66ce8d');
-
-console.log(cart);
-console.log(businessCart);
+export const cart = new Cart('cart-oop');

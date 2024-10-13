@@ -1,18 +1,21 @@
 /**
+ * @typedef {Object} deliveryOption
+ * @property {number} id
+ * @property {number} deliveryTime
+ * @property {number} deliveryPrice
+ */
+
+/**
  * Returns an object containing a delivery option based on the given delivery ID
  * @param {number} optionId - ID of the delivery option to find
- * @returns {{
- *  id: number,
- *  deliveryTime: number
- *  deliveryPrice: number
- * }} The delivery object that matches the given ID
+ * @returns {deliveryOption} The delivery object that matches the given ID
  */
 export function getDeliveryOption(optionId) {
   return deliveryOptions.find((option) => option.id === optionId); // || deliveryOptions[0];
 }
 
 /**
- * @type {{id: number, deliveryTime: number, deliveryPrice: number}[]}
+ * @type {deliveryOption[]}
  */
 export const deliveryOptions = [
   {
