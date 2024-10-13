@@ -1,5 +1,5 @@
 /**
- * @typedef {Object} cartItem
+ * @typedef {Object} CartItem
  * @property {string} productId
  * @property {number} quantity
  * @property {number} deliveryId
@@ -11,7 +11,7 @@
 class Cart {
   #maxCapacity = 99;
   #localStorageKey;
-  /** @type {cartItem[]} */
+  /** @type {CartItem[]} */
   #cartItems;
 
   /**
@@ -34,19 +34,20 @@ class Cart {
   }
 
   get cartItems() {
-    /** @type {cartItem[]} */
+    /** @type {CartItem[]} */
     const deepClone = JSON.parse(JSON.stringify(this.#cartItems));
     return deepClone;
   }
 
   deleteCartItems() {
     this.#cartItems.length = 0;
+    this.#saveToStorage();
   }
 
   /**
    * Returns an object containing an item based on the given product ID
    * @param {string} productId - The ID of the cart item to find
-   * @returns {cartItem} The item object that matches the given ID.
+   * @returns {CartItem} The item object that matches the given ID.
    */
   getCartItem(productId) {
     return this.#cartItems.find((item) => item.productId === productId);
@@ -76,7 +77,7 @@ class Cart {
       });
     }
 
-    localStorage.setItem(this.#localStorageKey, JSON.stringify(this.#cartItems));
+    this.#saveToStorage();
   }
 
   /**
@@ -96,7 +97,7 @@ class Cart {
     if (matchingItem) {
       matchingItem.quantity = Math.min(quantity, this.#maxCapacity);
     }
-    localStorage.setItem(this.#localStorageKey, JSON.stringify(this.#cartItems));
+    this.#saveToStorage();
   }
 
   /**
@@ -107,7 +108,7 @@ class Cart {
   removeFromCart(productId) {
     const indexToRemove = this.#cartItems.findIndex((item) => item.productId === productId);
     this.#cartItems.splice(indexToRemove, 1);
-    localStorage.setItem(this.#localStorageKey, JSON.stringify(this.#cartItems));
+    this.#saveToStorage();
   }
 
   /**
@@ -122,6 +123,10 @@ class Cart {
     // });
     const matchingItem = this.getCartItem(productId);
     matchingItem.deliveryId = deliveryId;
+    this.#saveToStorage();
+  }
+
+  #saveToStorage() {
     localStorage.setItem(this.#localStorageKey, JSON.stringify(this.#cartItems));
   }
 }

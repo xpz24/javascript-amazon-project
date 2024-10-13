@@ -6,6 +6,7 @@ export default {
   entry: {
     amazon: './scripts/amazon.js',
     checkout: './scripts/checkout.js',
+    orders: './scripts/orders.js',
     // orderSummary: './scripts/checkout/orderSummary.js',
 
     // Separate entry point for Jasmine test files

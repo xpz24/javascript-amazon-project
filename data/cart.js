@@ -1,5 +1,5 @@
 /**
- * @typedef {Object} cartItem
+ * @typedef {Object} CartItem
  * @property {string} productId
  * @property {number} quantity
  * @property {number} deliveryId
@@ -7,7 +7,7 @@
 
 /**
  * Contains the list of cartItem Objects
- * @type {cartItem[]}
+ * @type {CartItem[]}
  */
 export const cart = JSON.parse(localStorage.getItem('cart')) || []; // This is the production code for cart
 
@@ -62,7 +62,7 @@ export function updateDeliveryOption(productId, deliveryId) {
 /**
  * Returns an object containing an item based on the given product ID
  * @param {string} productId - The ID of the cart item to find
- * @returns {cartItem} The item object that matches the given ID.
+ * @returns {CartItem} The item object that matches the given ID.
  */
 export function getCartItem(productId) {
   return cart.find((cartItem) => cartItem.productId === productId);
