@@ -38,10 +38,6 @@ class Cart {
     return deepClone;
   }
 
-  // get length() {
-  //   return this.#cartItems.length
-  // }
-
   deleteCartItems() {
     this.#cartItems.length = 0;
   }
@@ -66,7 +62,7 @@ class Cart {
     const matchingItem = this.getCartItem(productId);
 
     if (matchingItem) {
-      matchingItem.quantity += quantity;
+      matchingItem.quantity = Math.min(matchingItem.quantity + quantity, 99);
     } else {
       this.#cartItems.push({
         productId: productId,
@@ -75,6 +71,22 @@ class Cart {
       });
     }
 
+    localStorage.setItem(this.#localStorageKey, JSON.stringify(this.#cartItems));
+  }
+
+  /**
+   * Replaces the quantity of an item inside the cart
+   * Saves the cart to localStorage.
+   * @param {string} productId - The ID of the cart item to be modified
+   * @param {number} quantity - The quantity to replace with
+   * @returns {void} void
+   */
+  overrideQuantity(productId, quantity) {
+    const matchingItem = this.getCartItem(productId);
+
+    if (matchingItem) {
+      matchingItem.quantity = Math.min(matchingItem.quantity + quantity, 99);
+    }
     localStorage.setItem(this.#localStorageKey, JSON.stringify(this.#cartItems));
   }
 

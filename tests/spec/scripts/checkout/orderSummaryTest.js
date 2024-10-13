@@ -1,10 +1,9 @@
 import { renderOrderSummary } from '../../../../scripts/checkout/orderSummary.js';
 import { cart } from '../../../../data/cart-class.js';
+import { loadProducts } from '../../../../data/products.js';
 
 describe('Test Suite: renderOrderSummary', () => {
-  /**
-   * @type {{productId: string, quantity: number}[]}
-   */
+  /** @type {{productId: string, quantity: number}[]} */
   const testProducts = [
     {
       productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
@@ -17,6 +16,8 @@ describe('Test Suite: renderOrderSummary', () => {
   ];
 
   const testContainerElement = document.querySelector('.js-test-container');
+
+  beforeAll((done) => loadProducts(done));
 
   beforeEach(() => {
     spyOn(localStorage, 'setItem').and.stub();
@@ -41,7 +42,7 @@ describe('Test Suite: renderOrderSummary', () => {
   });
 
   afterEach(() => {
-    testContainerElement.innerHTML = ''; //uncomment to view the render on test page
+    testContainerElement.innerHTML = '';
   });
 
   it('Display the cart', () => {

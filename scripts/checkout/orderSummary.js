@@ -110,7 +110,7 @@ export function renderOrderSummary() {
           alert('Quantity must be greater than zero.');
           return;
         }
-        cartItem.quantity = newQuantity;
+        cart.overrideQuantity(productId, newQuantity);
         renderOrderSummary();
         renderPaymentSummary();
       }
