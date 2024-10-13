@@ -59,17 +59,18 @@ class Cart {
    * Adds an object to the cart array based on the given product ID, if it already exists
    * then updates the quantity property of the existing object. Saves the cart to localStorage.
    * @param {string} productId - The ID of the cart item to be added
+   * @param {number} quantity - The quantity of cart item to be added
    * @returns {void} void
    */
-  addToCart(productId) {
+  addToCart(productId, quantity = 1) {
     const matchingItem = this.getCartItem(productId);
 
     if (matchingItem) {
-      matchingItem.quantity++;
+      matchingItem.quantity += quantity;
     } else {
       this.#cartItems.push({
         productId: productId,
-        quantity: 1,
+        quantity: quantity,
         deliveryId: 0,
       });
     }
