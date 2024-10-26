@@ -1,3 +1,9 @@
 {
-  "extends": ["html-validate:recommended", "html-validate:prettier"]
+  "$schema": "https://html-validate.org/schemas/config.json",
+  "elements": [
+    "html5"
+  ],
+  "extends": [
+    "html-validate:recommended", "html-validate:prettier"
+  ]
 }

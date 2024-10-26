@@ -1,39 +1,24 @@
-import globals from 'globals';
-import pluginJs from '@eslint/js';
-import jasminePlugin from 'eslint-plugin-jasmine';
+// @ts-check
+
+import eslint from '@eslint/js';
+import tseslint from 'typescript-eslint';
 import nodePlugin from 'eslint-plugin-n';
 import eslintConfigPrettier from 'eslint-config-prettier';
 
-export default [
+export default tseslint.config(
+  eslint.configs.recommended,
+  ...tseslint.configs.strictTypeChecked,
+  ...tseslint.configs.stylisticTypeChecked,
   {
-    plugins: {
-      jasmine: jasminePlugin,
-      nodePlugin: nodePlugin,
-    },
     languageOptions: {
-      globals: {
-        ...globals.browser, // Assuming browser globals are required globally
-        ...globals.node, // Adding Node.js globals for general purpose
-        ...globals.jasmine, // Jasmine globals for testing
-      },
+      ecmaVersion: 'latest',
+      sourceType: 'module',
       parserOptions: {
-        // ecmaVersion: "latest",  // latest is default
-        // sourceType: 'module', // module is default
-        ecmaFeatures: {
-          impliedStrict: true, // Enable support for ES modules
-        },
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
       },
     },
-    rules: {
-      ...pluginJs.configs.recommended.rules, // General recommended rules
-      ...jasminePlugin.configs.recommended.rules,
-    },
   },
-  {
-    ...nodePlugin.configs['flat/recommended'],
-    rules: {
-      'n/exports-style': ['error', 'exports'],
-    },
-  },
-  eslintConfigPrettier,
-];
+  nodePlugin.configs['flat/recommended'],
+  eslintConfigPrettier.rules,
+);

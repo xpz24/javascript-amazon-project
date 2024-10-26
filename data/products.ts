@@ -1,35 +1,61 @@
 import { formatCurrency } from '../scripts/utils/money.js';
 
-/**
- * @typedef {Object} ProductDetails
- * @property {string} id
- * @property {string} image
- * @property {string} name
- * @property {{stars: number, count: number}} rating
- * @property {number} priceCents
- * @property {string[]} keywords
- * @property {string} [type]
- * @property {string} [sizeChartLink]
- * @property {string} [instructionLink]
- * @property {string} [warrantyLink]
- */
+interface ProductDetails {
+  id: string;
+  image: string;
+  name: string;
+  rating: {
+    stars: number;
+    count: number;
+  };
+  priceCents: number;
+  keywords: string[];
+  type?: string;
+  sizeChartLink?: string;
+  instructionLink?: string;
+  warrantyLink?: string;
+}
+
+interface IProduct {
+  id: string;
+  image: string;
+  name: string;
+  rating: {
+    stars: number;
+    count: number;
+  };
+  priceCents: number;
+  keywords: string[];
+
+  get starsUrl(): string;
+  get price(): string;
+  extraInfoHTML: () => string;
+  // Static getProduct()
+}
+
+interface IClothing extends IProduct {
+  //type: string; //no need as we know the type from class name, right?
+  sizeChartLink: string;
+}
+
+interface IAppliance extends IProduct {
+  //type: string;
+  instructionLink: string;
+  warrantyLink: string;
+}
 
 /**
  * This base class encapsulates basic product properties and methods
  */
-export class Product {
-  id;
-  image;
-  name;
-  rating;
-  priceCents;
-  keywords;
+export class Product implements IProduct {
+  readonly id;
+  readonly image;
+  readonly name;
+  readonly rating;
+  readonly priceCents;
+  readonly keywords;
 
-  /**
-   * @constructor Product
-   * @param {ProductDetails} productDetails
-   */
-  constructor(productDetails) {
+  constructor(productDetails: ProductDetails) {
     this.id = productDetails.id;
     this.image = productDetails.image;
     this.name = productDetails.name;
@@ -40,7 +66,6 @@ export class Product {
 
   /**
    * This method returns the path of the rating stars image.
-   * @returns {string} Rating stars image link.
    */
   get starsUrl() {
     return `images/ratings/rating-${this.rating.stars * 10}.png`;
@@ -48,7 +73,6 @@ export class Product {
 
   /**
    * This method returns the price of the product in USD
-   * @returns {string} Price of product in USD
    */
   get price() {
     return formatCurrency(this.priceCents);
@@ -65,85 +89,73 @@ export class Product {
    * Returns an object containing a product based on the given product ID
    * Might be better to put this function in as a standalone function or in
    * a static class called Products, which can contain all static methods that pertains to products
-   * @static
-   * @param {string} productId - The ID of the product to find
-   * @returns {Product | Clothing} The product object that matches the given ID.
    */
-  static getProduct(productId) {
+  static getProduct(productId: string): Product | Clothing | Appliance {
     // return products.find((product) => {
     //   return product.id === productId;
     // });
-    return products.find((product) => product.id === productId);
+    const matchingProduct = products.find((product) => product.id === productId);
+    if (!matchingProduct) {
+      throw new Error('Matching Product not found');
+    }
+    return matchingProduct;
   }
 }
 
 /**
  * Specialized for clothing objects
- * @extends {Product}
  */
-class Clothing extends Product {
-  sizeChartLink;
+class Clothing extends Product implements IClothing {
+  readonly sizeChartLink;
 
-  /**
-   * @constructor Clothing
-   * @param {ProductDetails} productDetails
-   */
-  constructor(productDetails) {
+  constructor(productDetails: ProductDetails) {
     super(productDetails);
-    this.sizeChartLink = productDetails.sizeChartLink;
+    if (!productDetails.sizeChartLink) {
+      throw new Error('Clothing products must have a size chart link.');
+    }
+    this.sizeChartLink = productDetails.sizeChartLink as string;
   }
 
-  /**
-   * Method returns the HTML tag <a> referenced to size chart link
-   * @override
-   * @returns {string} Size chart Link
-   */
-  extraInfoHTML() {
+  override extraInfoHTML() {
     return `<a href="${this.sizeChartLink}" target="_blank">Size chart</a>`;
   }
 }
 
 /**
  * Specialized for appliance objects
- * @extends {Product}
  */
-class Appliance extends Product {
-  instructionLink;
-  warrantyLink;
+class Appliance extends Product implements IAppliance {
+  readonly instructionLink;
+  readonly warrantyLink;
 
-  /**
-   * @constructor Appliance
-   * @param {ProductDetails} productDetails
-   */
-  constructor(productDetails) {
+  constructor(productDetails: ProductDetails) {
     super(productDetails);
-    this.instructionLink = productDetails.instructionLink;
-    this.warrantyLink = productDetails.warrantyLink;
+    if (!productDetails.instructionLink || !productDetails.warrantyLink) {
+      throw new Error('Appliance products must have instruction and warranty links.');
+    }
+    this.instructionLink = productDetails.instructionLink as string;
+    this.warrantyLink = productDetails.warrantyLink as string;
   }
 
   /**
    * Method returns the HTML links for warranty and instructions
-   * @override
-   * @returns {string} Instruction and Warranty link
    */
-  extraInfoHTML() {
-    return `<a href="${this.instructionLink}" target="_blank">Instructions</a><a href="${this.warrantyLink}" target="_blank">warranty</a>`;
+  override extraInfoHTML() {
+    return `<div><a href="${this.instructionLink}" target="_blank">Instructions</a><a href="${this.warrantyLink}" target="_blank">warranty</a></div>`;
   }
 }
 
 /**
  * A list of product objects available in the store. Each product object contains
  * various details such as the product ID, image path, name, rating, price, and keywords.
- * @type {(Product | Clothing | Appliance)[]}
  */
-export let products = [];
+export let products: (Product | Clothing | Appliance)[] = [];
 
 export function loadProductsFetch() {
   const promise = fetch('https://supersimplebackend.dev/products')
     .then((response) => response.json())
     .then((parsedData) => {
-      /** @type {ProductDetails[]} */
-      const productObjects = parsedData;
+      const productObjects: ProductDetails[] = parsedData;
 
       products = productObjects.map((productDetails) => {
         if (productDetails.type === 'clothing') {
@@ -158,6 +170,14 @@ export function loadProductsFetch() {
       });
     });
   return promise;
+}
+
+export function safeGetProduct(productId: string): Product | Clothing | Appliance | null {
+  try {
+    return Product.getProduct(productId);
+  } catch {
+    return null; // Return null if product not found
+  }
 }
 
 // /**

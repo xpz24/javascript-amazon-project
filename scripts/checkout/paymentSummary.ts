@@ -2,26 +2,19 @@ import { cart } from '../../data/cart-class.js';
 import { Product } from '../../data/products.js';
 import { getDeliveryOption } from '../../data/deliveryOptions.js';
 import { formatCurrency } from '../utils/money.js';
-import { addOrder } from '../../data/orders.js';
-/** @typedef {import('../../data/orders.js').Order} Order */
+import { addOrder, Order } from '../../data/orders.js';
 
 /**
  * This function is used to render the payment summary of the checkout page
  */
-export function renderPaymentSummary() {
+export function renderPaymentSummary(): void {
   let totalQuantity = 0;
   let itemTotalCents = 0;
   let totalShippingCents = 0;
   const cartItems = cart.cartItems;
 
   cartItems.forEach((item) => {
-    // const matchingProduct = products.find((product) => {
-    //   return product.id === cartItem.productId;
-    // });
     const matchingProduct = Product.getProduct(item.productId);
-    // const matchingDeliveryOption = deliveryOptions.find((option) => {
-    //   return option.id === cartItem.deliveryId;
-    // });
     const matchingDeliveryOption = getDeliveryOption(item.deliveryId);
 
     totalQuantity += item.quantity;
@@ -75,14 +68,22 @@ export function renderPaymentSummary() {
   </button>
   `;
 
-  const paymentSummaryElement = document.querySelector('.js-payment-summary');
-  paymentSummaryElement && (paymentSummaryElement.innerHTML = paymentSummaryHTML);
+  const paymentSummaryElement = document.querySelector<HTMLDivElement>('.js-payment-summary');
+  if (!paymentSummaryElement) {
+    throw new Error('paymentSummaryElement does not exist');
+  }
+  paymentSummaryElement.innerHTML = paymentSummaryHTML;
 
-  const returnHomeElement = document.querySelector('.js-return-to-home-link');
-  returnHomeElement && (returnHomeElement.innerHTML = `${totalQuantity} items`);
+  const returnHomeElement = document.querySelector<HTMLLinkElement>('.js-return-to-home-link');
+  if (!returnHomeElement) {
+    throw new Error('returnHomeElement does not exist');
+  }
+  returnHomeElement.innerHTML = `${totalQuantity} items`;
 
-  /** @type {HTMLButtonElement} */
-  const placeOrderButton = document.querySelector('.js-place-order');
+  const placeOrderButton = document.querySelector<HTMLButtonElement>('.js-place-order');
+  if (!placeOrderButton) {
+    throw new Error('placeOrderButton does not exist');
+  }
   placeOrderButton.addEventListener('click', async () => {
     try {
       const response = await fetch('https://supersimplebackend.dev/orders', {
@@ -95,13 +96,16 @@ export function renderPaymentSummary() {
         }),
       });
 
-      /** @type {Order} */
-      const order = await response.json();
-      addOrder(order);
-    } catch (error) {
-      console.log(`Unexpected error has occurred\nPlease try again later:\n${error}`);
-    }
+      if (!response.ok) {
+        throw new Error(`Order failed with status: ${response.status}`);
+      }
 
-    window.location.href = 'orders.html'
+      const order: Order = await response.json();
+      addOrder(order);
+      window.location.href = 'orders.html';
+    } catch (error) {
+      console.log(`Unexpected error:\n${error}`);
+      alert('An error occurred while placing your order. Please try again.');
+    }
   });
 }

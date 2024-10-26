@@ -1,9 +1,9 @@
 import { orders } from '../data/orders.js';
 import { formatCurrency } from './utils/money.js';
 import { Product, loadProductsFetch } from '../data/products.js';
-import { cart } from '../data/cart-class.js';
+import { cart, updateCartQuantityHTML } from '../data/cart-class.js';
 import dayjs from 'dayjs';
-/** @typedef {import('../data/orders.js').ProductOrdered} ProductOrdered */
+import { ProductOrdered } from '../data/orders.js';
 
 renderOrdersPage();
 
@@ -43,18 +43,20 @@ async function renderOrdersPage() {
       </div>
     `;
   });
-  const ordersGridElement = document.querySelector('.js-orders-grid');
+  const ordersGridElement = document.querySelector<HTMLDivElement>('.js-orders-grid');
+  if (!ordersGridElement) {
+    throw new Error('The orders grid element does not exist');
+  }
   ordersGridElement.innerHTML = ordersHTML;
 
-  /**
-   *
-   * @param {ProductOrdered[]} products
-   */
-  function renderDetailsGrid(products) {
+  function renderDetailsGrid(products: ProductOrdered[]): string {
     let productHTML = '';
 
     products.forEach((product) => {
       const productObject = Product.getProduct(product.productId);
+      if (!productObject) {
+        throw new Error('Could not find the product to render the details');
+      }
       const deliveryDate = dayjs(product.estimatedDeliveryTime).format('MMMM DD');
 
       productHTML += `
@@ -87,7 +89,7 @@ async function renderOrdersPage() {
     return productHTML;
   }
   cart.deleteCartItems();
-
-  const cartQuantityElement = document.querySelector('.js-cart-quantity');
-  cartQuantityElement && (cartQuantityElement.innerHTML = `${cart.totalQuantity}`);
+  updateCartQuantityHTML(cart.totalQuantity);
+  // const cartQuantityElement = document.querySelector('.js-cart-quantity');
+  // cartQuantityElement && (cartQuantityElement.innerHTML = `${cart.totalQuantity}`);
 }

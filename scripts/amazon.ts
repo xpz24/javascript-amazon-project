@@ -1,8 +1,7 @@
-import { cart } from '../data/cart-class.js';
+import { cart, updateCartQuantityHTML } from '../data/cart-class.js';
 import { products, loadProductsFetch } from '../data/products.js';
 
-
-renderProductGrid()
+renderProductGrid();
 
 async function renderProductGrid() {
   try {
@@ -10,9 +9,11 @@ async function renderProductGrid() {
   } catch (error) {
     console.log(error);
     console.log('Error, please try again');
+    return;
   }
-  updateCartQuantity();
-  let productsHTML = '';
+  updateCartQuantityHTML(cart.totalQuantity);
+  const qtyOptionAmount: number = 10;
+  let productsHTML: string = '';
 
   products.forEach((product) => {
     productsHTML += `
@@ -40,16 +41,7 @@ async function renderProductGrid() {
 
       <div class="product-quantity-container">
         <select class="js-selected-quantity-${product.id}">
-          <option selected value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
+          ${generateQuantityOptions(qtyOptionAmount)}
         </select>
       </div>
       ${product.extraInfoHTML()}
@@ -66,20 +58,34 @@ async function renderProductGrid() {
     </div>`;
   });
 
-  document.querySelector('.js-products-grid').innerHTML = productsHTML;
-
-  function updateCartQuantity() {
-    document.querySelector('.js-cart-quantity').innerHTML = String(cart.totalQuantity);
+  const productGridElement = document.querySelector<HTMLDivElement>('.js-products-grid');
+  if (!productGridElement) {
+    throw new Error('The product grid element does not exist');
   }
+  productGridElement.innerHTML = productsHTML;
 
-  document.querySelectorAll('.js-add-to-cart').forEach((button) => {
-    const HTMLButton = /** @type {HTMLButtonElement} */ (button);
-    HTMLButton.addEventListener('click', () => {
-      const productId = HTMLButton.dataset.productId;
-      /** @type {HTMLSelectElement} */
-      const selectElement = document.querySelector(`.js-selected-quantity-${productId}`);
+  const addToCartButtons = document.querySelectorAll<HTMLButtonElement>('.js-add-to-cart');
+  addToCartButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const productId = button.dataset.productId;
+      const selectElement = document.querySelector<HTMLSelectElement>(
+        `.js-selected-quantity-${productId}`,
+      );
+      if (!productId) {
+        throw new Error('The product ID is not linked to the add to cart button');
+      } else if (!selectElement) {
+        throw new Error('Cannot find the quantity select element');
+      }
       cart.addToCart(productId, Number(selectElement.value));
-      updateCartQuantity();
+      updateCartQuantityHTML(cart.totalQuantity);
     });
   });
+}
+
+function generateQuantityOptions(max: number): string {
+  let options = '<option selected value="1">1</option>';
+  for (let i = 2; i <= max; i++) {
+    options += `<option value="${i}">${i}</option>`;
+  }
+  return options;
 }
